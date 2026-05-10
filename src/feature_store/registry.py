@@ -233,7 +233,7 @@ def validate_dataframe(df, config, allow_extra_columns: bool = False) -> None:
         expected.add(k.name)
     for k in config.partition_columns:
         expected.add(k.name)
-    for c in config.schema:
+    for c in getattr(config, "schema", []):
         expected.add(c.name)
 
     actual = set(df.columns)

@@ -50,18 +50,20 @@ class StorageBackend(abc.ABC):
 
 
 class LocalBackend(StorageBackend):
-    """Backend that reads from and writes to the local filesystem."""
+    """Backend that reads from and writes to the local filesystem.
+
+    Uses Python-level parquet I/O (pyarrow / pandas) to avoid Hadoop
+    filesystem issues on Windows and other constrained environments.
+    """
 
     def read_parquet(self, spark, path, columns=None, filters=None):
-        reader = spark.read.parquet(path)
-        # If either columns or filters are requested, apply them.
-        if columns is not None or filters is not None:
-            # Use the provided path as a starting DataFrame to deduce available
-            # columns, then select/filter.  The simplest approach is to read
-            # the full frame then apply the narrowing – this is acceptable for
-            # local / prototyping use.
-            pass
-        return reader
+        import pandas as pd
+        import pyarrow.parquet as pq
+
+        path = path.replace("\\", "/")
+        table = pq.read_table(path, columns=columns)
+        pdf = table.to_pandas()
+        return spark.createDataFrame(pdf)
 
     def write_parquet(
         self,
@@ -72,13 +74,40 @@ class LocalBackend(StorageBackend):
         compression="snappy",
         partition_num=24,
     ):
-        (
-            df.repartition(partition_num)
-            .write.partitionBy(*partition_cols)
-            .mode(mode)
-            .option("compression", compression)
-            .parquet(path)
-        )
+        import os as _os
+        import shutil as _shutil
+
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+
+        path = path.replace("\\", "/")
+
+        # Honour overwrite / append semantics.
+        if mode == "overwrite" and _os.path.exists(path):
+            _shutil.rmtree(path, ignore_errors=True)
+        elif mode == "append" and _os.path.exists(path):
+            pass  # will write alongside existing files
+        elif mode == "ignore" and _os.path.exists(path):
+            return
+
+        _os.makedirs(path, exist_ok=True)
+
+        pdf = df.toPandas()
+        table = pa.Table.from_pandas(pdf)
+
+        if partition_cols:
+            pq.write_to_dataset(
+                table,
+                path,
+                partition_cols=list(partition_cols),
+                compression=compression,
+            )
+        else:
+            pq.write_table(
+                table,
+                _os.path.join(path, "part-00000.parquet"),
+                compression=compression,
+            )
 
     def open(self, path, mode="r"):
         return open(path, mode, encoding="utf-8")

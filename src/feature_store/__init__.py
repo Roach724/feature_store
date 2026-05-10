@@ -33,6 +33,7 @@ from feature_store.registry import (
     list_entities,
     sync_lifecycle,
 )
+from feature_store.client import FeatureStoreClient
 
 __all__ = [
     "EntityKind",
@@ -53,6 +54,7 @@ __all__ = [
     "LocalBackend",
     "GCSBackend",
     "get_backend",
+    "FeatureStoreClient",
     "FeatureStoreError",
     "EntityNotFoundError",
     "ColumnNotFoundError",
