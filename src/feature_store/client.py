@@ -4,6 +4,7 @@ import logging
 import os
 import uuid
 from collections import defaultdict
+from contextlib import contextmanager
 from dataclasses import is_dataclass
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -71,6 +72,26 @@ def _old_to_new(data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# CheckpointContext
+# ---------------------------------------------------------------------------
+
+class CheckpointContext:
+    """Holds a checkpoint directory path.
+
+    The owning context manager is responsible for calling :meth:`cleanup`.
+    """
+
+    def __init__(self, backend, path: str):
+        self.backend = backend
+        self.path = path
+
+    def cleanup(self):
+        if self.path and self.backend.exists(self.path):
+            self.backend.rm(self.path, recursive=True)
+        self.path = None
+
+
+# ---------------------------------------------------------------------------
 # FeatureStoreClient
 # ---------------------------------------------------------------------------
 
@@ -82,6 +103,24 @@ class FeatureStoreClient:
         self.spark = spark
         self.registry_dir = registry_dir.rstrip("/").rstrip("\\").replace("\\", "/")
         self.backend = get_backend(self.registry_dir)
+
+    # -----------------------------------------------------------------------
+    # Checkpoint context manager
+    # -----------------------------------------------------------------------
+
+    @contextmanager
+    def checkpoint_context(self, base_dir: str):
+        """Context manager that creates a unique checkpoint directory, sets it
+        on the SparkContext, and guarantees cleanup on exit."""
+        path = f"{base_dir}/{uuid.uuid4().hex[:8]}"
+        self.spark.sparkContext.setCheckpointDir(path)
+        ctx = CheckpointContext(self.backend, path)
+        logger.info("Checkpoint context created: %s", path)
+        try:
+            yield ctx
+        finally:
+            ctx.cleanup()
+            logger.debug("Checkpoint context cleaned: %s", path)
 
     # -----------------------------------------------------------------------
     # Registration
@@ -325,6 +364,7 @@ class FeatureStoreClient:
         end_date: Optional[str] = None,
         checkpoint_interval: int = 5,
         checkpoint_dir: Optional[str] = None,
+        checkpoint_ctx: Optional["CheckpointContext"] = None,
     ):
         """Assemble a feature DataFrame by joining columns from the feature
         views that back a registered model.
@@ -338,6 +378,9 @@ class FeatureStoreClient:
         checkpoint_dir :
             Directory used for Spark checkpoint files.  Required when the
             number of joins exceeds *checkpoint_interval*.
+        checkpoint_ctx :
+            Optional :class:`CheckpointContext` whose owning context manager
+            controls cleanup.  When provided, *checkpoint_dir* is ignored.
         """
         config = self._load_config(EntityKind.MODEL, model_name, model_version)
 
@@ -347,19 +390,31 @@ class FeatureStoreClient:
             view_groups[(col.feature_view, col.feature_view_version)].append(col.name)
 
         total_joins = len(view_groups)
-        if total_joins > checkpoint_interval and checkpoint_dir is None:
-            raise ValueError(
-                f"Number of joins ({total_joins}) exceeds checkpoint_interval "
-                f"({checkpoint_interval}) but no checkpoint_dir was provided"
-            )
 
         checkpoint_path = None
-        if total_joins > checkpoint_interval:
+        owns_checkpoint = False
+
+        if checkpoint_ctx is not None:
+            if checkpoint_dir is not None:
+                logger.warning(
+                    "checkpoint_dir=%r ignored because checkpoint_ctx was provided",
+                    checkpoint_dir,
+                )
+            if total_joins > checkpoint_interval:
+                checkpoint_path = checkpoint_ctx.path
+                self.spark.sparkContext.setCheckpointDir(checkpoint_path)
+        elif total_joins > checkpoint_interval:
+            if checkpoint_dir is None:
+                raise ValueError(
+                    f"Number of joins ({total_joins}) exceeds checkpoint_interval "
+                    f"({checkpoint_interval}) but no checkpoint_dir or checkpoint_ctx was provided"
+                )
             checkpoint_path = os.path.join(
                 checkpoint_dir,
                 f"{model_name}_{model_version}_{uuid.uuid4().hex[:8]}",
             )
             self.spark.sparkContext.setCheckpointDir(checkpoint_path)
+            owns_checkpoint = True
 
         join_keys = [k.name for k in config.primary_keys] + [
             k.name for k in config.partition_columns
@@ -386,8 +441,9 @@ class FeatureStoreClient:
 
             return result_df
         finally:
-            if checkpoint_path:
+            if owns_checkpoint and checkpoint_path:
                 self.backend.rm(checkpoint_path, recursive=True)
+                logger.debug("Checkpoint cleaned: %s", checkpoint_path)
 
     # -----------------------------------------------------------------------
     # Training dataset export

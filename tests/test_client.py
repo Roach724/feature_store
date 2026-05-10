@@ -1,11 +1,12 @@
 import os
+import sys
 import tempfile
 import pytest
 
 pyspark = pytest.importorskip("pyspark")
 from pyspark.sql import SparkSession
 
-from feature_store.client import FeatureStoreClient
+from feature_store.client import CheckpointContext, FeatureStoreClient
 from feature_store.types import EntityKind
 from feature_store.schema import (
     FeatureViewConfig, ModelConfig, DatasetConfig,
@@ -199,3 +200,122 @@ class TestManagement:
         assert info.name == "info_test"
         assert info.version == "v2"
         assert len(info.schema) == 1
+
+
+class TestCheckpointContext:
+    def test_cleanup(self, tmp_path):
+        from feature_store.storage import LocalBackend
+        backend = LocalBackend()
+        ckpt_dir = os.path.join(tmp_path, "ckpt")
+        os.makedirs(os.path.join(ckpt_dir, "sub"))
+        with open(os.path.join(ckpt_dir, "f.txt"), "w") as f:
+            f.write("data")
+
+        ctx = CheckpointContext(backend, ckpt_dir)
+        assert os.path.exists(ckpt_dir)
+        ctx.cleanup()
+        assert not os.path.exists(ckpt_dir)
+
+    def test_cleanup_idempotent(self, tmp_path):
+        from feature_store.storage import LocalBackend
+        backend = LocalBackend()
+        ctx = CheckpointContext(backend, os.path.join(tmp_path, "nonexistent"))
+        ctx.cleanup()  # should not raise
+        ctx.cleanup()  # should not raise
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="setCheckpointDir not supported on Windows")
+class TestCheckpointContextManager:
+    def test_context_creates_and_cleans(self, spark_session, tmp_path):
+        ckpt_base = os.path.join(tmp_path, "ckpt_base")
+        os.makedirs(ckpt_base)
+        registry_dir = os.path.join(tmp_path, "registry")
+        os.makedirs(registry_dir)
+        client = FeatureStoreClient(spark=spark_session, registry_dir=registry_dir)
+
+        observed_path = None
+        with client.checkpoint_context(ckpt_base) as ctx:
+            observed_path = ctx.path
+            # context exists during the with block
+
+        # After context exit, checkpoint dir should be cleaned
+        assert not os.path.exists(observed_path)
+
+    def test_context_isolated_per_call(self, spark_session, tmp_path):
+        ckpt_base = os.path.join(tmp_path, "ckpt_base")
+        os.makedirs(ckpt_base)
+        registry_dir = os.path.join(tmp_path, "registry")
+        os.makedirs(registry_dir)
+        client = FeatureStoreClient(spark=spark_session, registry_dir=registry_dir)
+
+        paths = []
+        with client.checkpoint_context(ckpt_base) as ctx1:
+            paths.append(ctx1.path)
+        with client.checkpoint_context(ckpt_base) as ctx2:
+            paths.append(ctx2.path)
+
+        assert paths[0] != paths[1]
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="setCheckpointDir not supported on Windows")
+class TestModelFeaturesWithCheckpointCtx:
+    def test_get_model_features_with_checkpoint_ctx(self, client, spark_session, tmp_path):
+        from feature_store.schema import FeatureViewConfig, ModelConfig, KeySpec, ColumnSpec, StorageSpec
+        from feature_store.types import EntityKind
+        from feature_store.storage import LocalBackend
+
+        fv1_path = os.path.join(tmp_path, "data", "fv_ckpt_a", "v1")
+        fv2_path = os.path.join(tmp_path, "data", "fv_ckpt_b", "v1")
+
+        fv1 = FeatureViewConfig(
+            name="fv_ckpt_a", version="v1",
+            primary_keys=[KeySpec(name="user_id", type="integer")],
+            partition_columns=[KeySpec(name="dt", type="string")],
+            storage=StorageSpec(base_path=fv1_path),
+            schema=[ColumnSpec(name="feat_a", type="double")],
+        )
+        fv2 = FeatureViewConfig(
+            name="fv_ckpt_b", version="v1",
+            primary_keys=[KeySpec(name="user_id", type="integer")],
+            partition_columns=[KeySpec(name="dt", type="string")],
+            storage=StorageSpec(base_path=fv2_path),
+            schema=[ColumnSpec(name="feat_b", type="integer")],
+        )
+        client.register(fv1)
+        client.register(fv2)
+        client.write_entity(
+            spark_session.createDataFrame([(1, "2024-01-01", 0.5)], ["user_id", "dt", "feat_a"]),
+            EntityKind.FEATURE_VIEW, "fv_ckpt_a", "v1",
+        )
+        client.write_entity(
+            spark_session.createDataFrame([(1, "2024-01-01", 10)], ["user_id", "dt", "feat_b"]),
+            EntityKind.FEATURE_VIEW, "fv_ckpt_b", "v1",
+        )
+        model = ModelConfig(
+            name="model_ckpt", version="v1",
+            primary_keys=[KeySpec(name="user_id", type="integer")],
+            partition_columns=[KeySpec(name="dt", type="string")],
+            schema=[
+                ColumnSpec(name="feat_a", type="double", feature_view="fv_ckpt_a", feature_view_version="v1"),
+                ColumnSpec(name="feat_b", type="integer", feature_view="fv_ckpt_b", feature_view_version="v1"),
+            ],
+        )
+        client.register(model)
+
+        query_df = spark_session.createDataFrame([(1, "2024-01-01")], ["user_id", "dt"])
+
+        ckpt_base = os.path.join(tmp_path, "ckpt_base")
+        os.makedirs(ckpt_base)
+
+        backend = LocalBackend()
+        ctx_path = None
+        with client.checkpoint_context(ckpt_base) as ctx:
+            ctx_path = ctx.path
+            result = client.get_model_features(
+                "model_ckpt", "v1", query_df, start_date="2024-01-01",
+                checkpoint_ctx=ctx, checkpoint_interval=1,
+            )
+            assert result.count() == 1
+
+        # After context exits, checkpoint should be cleaned
+        assert backend.exists(ctx_path) is False
