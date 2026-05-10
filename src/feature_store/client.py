@@ -642,9 +642,41 @@ class FeatureStoreClient:
         version: str,
         split: str = "train",
         mode: str = "overwrite",
+        auto_register: bool = True,
+        primary_keys: Optional[List[str]] = None,
+        partition_columns: Optional[List[str]] = None,
+        storage_base_path: Optional[str] = None,
+        **kwargs,
     ) -> None:
         """Write a training / validation / test split."""
-        config = self._load_config(EntityKind.TRAINING_SET, name, version)
+        # Ensure entity exists (auto-register if needed).
+        try:
+            config = self._load_config(EntityKind.TRAINING_SET, name, version)
+        except EntityNotFoundError:
+            if not auto_register:
+                raise
+            resolved_pk = primary_keys or _infer_primary_keys(dataset)
+            resolved_pc = partition_columns or _infer_partition_columns(dataset)
+            resolved_storage = storage_base_path or _infer_storage_path(
+                self.registry_dir, EntityKind.TRAINING_SET, name, version
+            )
+            logger.info(
+                "Auto-registering training_set/%s/%s (primary_keys=%s, "
+                "partition_columns=%s, storage=%s)",
+                name, version, resolved_pk, resolved_pc, resolved_storage,
+            )
+            self.register(
+                dataset,
+                kind=EntityKind.TRAINING_SET,
+                name=name,
+                version=version,
+                primary_keys=resolved_pk,
+                partition_columns=resolved_pc,
+                storage_base_path=resolved_storage,
+                **kwargs,
+            )
+            config = self._load_config(EntityKind.TRAINING_SET, name, version)
+
         base_path = (config.storage.base_path.replace("\\", "/") + "/" + split)
         partition_cols = [k.name for k in config.partition_columns]
         self.backend.write_parquet(
