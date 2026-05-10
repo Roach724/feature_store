@@ -1,0 +1,1081 @@
+# ==============================================================================
+# Auto-Generated Feature View Template: mobile_app_features@v1
+# ==============================================================================
+name: "mobile_app_features"
+version: "v1"
+entity: "customers"
+owner: "TODO_owner_emial"
+description: "TODO_description"
+
+storage:
+  type: "gcs"
+  base_path: "gs://hkt-emr-derick/feature_store/mob/feature_views/mobile_app_features/v1"
+  partition_column: "feature_month"
+  format: "parquet"
+
+pipeline:
+  update_frequency: "monthly"
+  source_job: "" 
+  alert_threshold_hours: 26
+
+retention:
+  ttl_days: 360
+  cold_tier_days: 180
+
+schema:
+  - name: "hashed_msisdn"
+    type: "string"
+    description: "TODO: fill in description for hashed_msisdn "
+    is_primary_key: true
+
+  - name: "feature_month"
+    type: "string"
+    description: "Data date for feature calculation (format: YYYY-MM-DD), representing the full snapshot up to that day"
+    is_primary_key: false
+    is_deprecated: false
+
+  - name: "risky_apps_distinct_category"
+    type: "integer"
+    description: "TODO: fill in description for risky_apps_distinct_category "
+    is_primary_key: false
+
+  - name: "risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "28Hse_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for 28Hse_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "28Hse_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for 28Hse_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "28Hse_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for 28Hse_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "28Hse_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for 28Hse_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "AAStocks_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for AAStocks_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "AAStocks_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for AAStocks_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "AAStocks_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AAStocks_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "AAStocks_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AAStocks_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "AdobeIO_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for AdobeIO_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "AdobeIO_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for AdobeIO_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "AdobeIO_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AdobeIO_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "AdobeIO_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AdobeIO_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "AdultSites_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for AdultSites_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "AdultSites_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for AdultSites_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "AdultSites_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AdultSites_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "AdultSites_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AdultSites_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Agoda_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Agoda_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Agoda_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Agoda_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Agoda_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Agoda_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Agoda_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Agoda_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "AmazonCloudfront_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for AmazonCloudfront_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "AmazonCloudfront_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for AmazonCloudfront_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "AmazonCloudfront_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AmazonCloudfront_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "AmazonCloudfront_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AmazonCloudfront_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "AppleLocationd_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for AppleLocationd_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "AppleLocationd_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for AppleLocationd_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "AppleLocationd_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AppleLocationd_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "AppleLocationd_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AppleLocationd_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "AppleSpotlight_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for AppleSpotlight_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "AppleSpotlight_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for AppleSpotlight_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "AppleSpotlight_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AppleSpotlight_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "AppleSpotlight_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AppleSpotlight_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "BaiduPush_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for BaiduPush_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "BaiduPush_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for BaiduPush_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "BaiduPush_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for BaiduPush_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "BaiduPush_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for BaiduPush_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Baike_com_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Baike_com_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Baike_com_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Baike_com_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Baike_com_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Baike_com_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Baike_com_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Baike_com_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "BidSwitch_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for BidSwitch_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "BidSwitch_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for BidSwitch_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "BidSwitch_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for BidSwitch_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "BidSwitch_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for BidSwitch_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Bilibili_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Bilibili_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Bilibili_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Bilibili_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Bilibili_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Bilibili_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Bilibili_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Bilibili_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "BioCatch_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for BioCatch_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "BioCatch_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for BioCatch_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "BioCatch_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for BioCatch_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "BioCatch_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for BioCatch_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "ChinaNetCenter_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for ChinaNetCenter_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "ChinaNetCenter_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for ChinaNetCenter_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "ChinaNetCenter_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for ChinaNetCenter_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "ChinaNetCenter_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for ChinaNetCenter_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "DMenuNTTDocomo_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for DMenuNTTDocomo_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "DMenuNTTDocomo_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for DMenuNTTDocomo_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "DMenuNTTDocomo_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for DMenuNTTDocomo_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "DMenuNTTDocomo_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for DMenuNTTDocomo_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Datadog_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Datadog_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Datadog_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Datadog_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Datadog_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Datadog_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Datadog_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Datadog_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "DeliveryHero_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for DeliveryHero_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "DeliveryHero_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for DeliveryHero_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "DeliveryHero_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for DeliveryHero_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "DeliveryHero_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for DeliveryHero_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Douyin_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Douyin_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Douyin_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Douyin_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Douyin_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Douyin_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Douyin_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Douyin_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "DuckDuckGo_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for DuckDuckGo_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "DuckDuckGo_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for DuckDuckGo_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "DuckDuckGo_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for DuckDuckGo_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "DuckDuckGo_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for DuckDuckGo_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "ETtoday_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for ETtoday_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "ETtoday_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for ETtoday_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "ETtoday_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for ETtoday_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "ETtoday_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for ETtoday_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "QFangWang_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for QFangWang_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "QFangWang_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for QFangWang_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "QFangWang_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for QFangWang_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "QFangWang_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for QFangWang_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Century21_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Century21_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Century21_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Century21_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Century21_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Century21_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Century21_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Century21_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "CentralEquity_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for CentralEquity_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "CentralEquity_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for CentralEquity_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "CentralEquity_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for CentralEquity_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "CentralEquity_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for CentralEquity_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Anjuke_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Anjuke_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Anjuke_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Anjuke_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Anjuke_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Anjuke_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Anjuke_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Anjuke_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "hk591new_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for hk591new_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "hk591new_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for hk591new_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "hk591new_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for hk591new_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "hk591new_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for hk591new_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "HongKongProperty_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for HongKongProperty_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "HongKongProperty_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for HongKongProperty_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "HongKongProperty_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for HongKongProperty_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "HongKongProperty_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for HongKongProperty_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "HouseFun_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for HouseFun_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "HouseFun_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for HouseFun_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "HouseFun_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for HouseFun_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "HouseFun_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for HouseFun_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "CSLMobile_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for CSLMobile_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "CSLMobile_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for CSLMobile_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "CSLMobile_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for CSLMobile_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "CSLMobile_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for CSLMobile_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Centaline_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Centaline_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Centaline_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Centaline_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Centaline_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Centaline_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Centaline_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Centaline_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Pricerite_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Pricerite_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Pricerite_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Pricerite_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Pricerite_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Pricerite_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Pricerite_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Pricerite_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "HKBN_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for HKBN_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "HKBN_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for HKBN_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "HKBN_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for HKBN_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "HKBN_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for HKBN_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "ChinaMobile_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for ChinaMobile_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "ChinaMobile_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for ChinaMobile_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "ChinaMobile_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for ChinaMobile_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "ChinaMobile_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for ChinaMobile_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Towngas_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Towngas_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Towngas_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Towngas_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Towngas_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Towngas_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Towngas_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Towngas_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "CLPGroup_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for CLPGroup_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "CLPGroup_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for CLPGroup_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "CLPGroup_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for CLPGroup_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "CLPGroup_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for CLPGroup_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "AppleServices_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for AppleServices_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "AppleServices_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for AppleServices_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "AppleServices_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AppleServices_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "AppleServices_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for AppleServices_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "CDN_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for CDN_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "CDN_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for CDN_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "CDN_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for CDN_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "CDN_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for CDN_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "DeviceServices_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for DeviceServices_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "DeviceServices_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for DeviceServices_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "DeviceServices_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for DeviceServices_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "DeviceServices_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for DeviceServices_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Enterprise_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Enterprise_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Enterprise_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Enterprise_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Enterprise_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Enterprise_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Enterprise_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Enterprise_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Finance_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Finance_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Finance_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Finance_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Finance_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Finance_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Finance_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Finance_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "FoodDrinks_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for FoodDrinks_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "FoodDrinks_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for FoodDrinks_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "FoodDrinks_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for FoodDrinks_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "FoodDrinks_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for FoodDrinks_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Lifestyle_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Lifestyle_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Lifestyle_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Lifestyle_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Lifestyle_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Lifestyle_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Lifestyle_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Lifestyle_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Media_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Media_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Media_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Media_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Media_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Media_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Media_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Media_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "News_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for News_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "News_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for News_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "News_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for News_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "News_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for News_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Productivity_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Productivity_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Productivity_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Productivity_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Productivity_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Productivity_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Productivity_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Productivity_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "RealEstate_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for RealEstate_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "RealEstate_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for RealEstate_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "RealEstate_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for RealEstate_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "RealEstate_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for RealEstate_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Security_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Security_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Security_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Security_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Security_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Security_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Security_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Security_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Technology_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Technology_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Technology_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Technology_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Technology_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Technology_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Technology_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Technology_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Telco_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Telco_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Telco_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Telco_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Telco_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Telco_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Telco_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Telco_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Travel_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Travel_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Travel_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Travel_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Travel_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Travel_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Travel_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Travel_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "Video_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for Video_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "Video_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for Video_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "Video_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Video_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "Video_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for Video_risky_apps_avg_volume_in "
+    is_primary_key: false
+
+  - name: "eCommerce_risky_apps_total_activity_days"
+    type: "double"
+    description: "TODO: fill in description for eCommerce_risky_apps_total_activity_days "
+    is_primary_key: false
+
+  - name: "eCommerce_risky_apps_ctime_count"
+    type: "double"
+    description: "TODO: fill in description for eCommerce_risky_apps_ctime_count "
+    is_primary_key: false
+
+  - name: "eCommerce_risky_apps_volume_in"
+    type: "double"
+    description: "TODO: fill in description for eCommerce_risky_apps_volume_in "
+    is_primary_key: false
+
+  - name: "eCommerce_risky_apps_avg_volume_in"
+    type: "double"
+    description: "TODO: fill in description for eCommerce_risky_apps_avg_volume_in "
+    is_primary_key: false
+

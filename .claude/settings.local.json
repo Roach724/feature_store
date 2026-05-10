@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import sys; print\\(sys.version\\)\")",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_types.py -v)",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_schema.py -v)",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_types.py tests/test_schema.py -v)",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_storage.py -v)",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_registry.py -v -k \"not TestValidateDataframe and not TestBuildConfigFromDf\")",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_registry.py -v)",
+      "Bash(PYTHONPATH=src python -m pytest tests/ -v --ignore=tests/test_registry.py)",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_client.py -v)",
+      "Bash(python -c ' *)",
+      "Bash(java *)",
+      "Bash(python -c \"import pyarrow; print\\('pyarrow available'\\); import pandas; print\\('pandas available'\\)\")",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_registry.py tests/test_storage.py tests/test_schema.py tests/test_types.py -v)",
+      "Bash(PYTHONPATH=src python -m pytest tests/ -v)",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_migration.py -v)",
+      "Bash(PYTHONPATH=\"src\" python -c \"from feature_store.registry import yaml_to_config; print\\('ok'\\)\")",
+      "Bash(export PYTHONPATH=\"src\")",
+      "Bash(python -m pytest tests/test_migration.py -v)",
+      "Bash(python -c \"import feature_store; print\\(feature_store.__file__\\)\")",
+      "Bash(pip show *)",
+      "Bash(PYTHONPATH=\"src\" python -m pytest tests/test_migration.py -v)",
+      "Bash(pip install *)",
+      "Bash(python -c \"import sys; sys.path.insert\\(0, 'D:/feature_store/src'\\); from feature_store.registry import yaml_to_config; print\\('ok'\\)\")",
+      "Bash(python -c \"exec\\(open\\('tests/conftest.py'\\).read\\(\\)\\); import feature_store.registry; print\\('ok'\\)\")",
+      "Bash(python -c \"import sys, os; sys.path.insert\\(0, os.path.abspath\\('src'\\)\\); from feature_store.registry import yaml_to_config; print\\('ok:', yaml_to_config\\)\")",
+      "Bash(python -m pytest tests/test_migration.py::TestMigrationRoundtrip::test_new_feature_view_loads -v --no-header)",
+      "Bash(python -m pytest --co)",
+      "Bash(python -m pytest -c /dev/null --rootdir=. --override-ini=\"pythonpath=src\" tests/test_migration.py -v)",
+      "Bash(python -m pytest tests/test_migration.py::TestMigrationRoundtrip::test_new_feature_view_loads -v --no-header -p no:typeguard -p no:cov)",
+      "Bash(python -c \"import sys; sys.path.insert\\(0, 'D:/feature_store/src'\\); print\\(sys.path[0]\\); from feature_store.registry import yaml_to_config; print\\('OK'\\)\")",
+      "Bash(python -m pytest tests/test_migration.py::TestMigrationRoundtrip -v)",
+      "Bash(python -m pytest tests/ -v)",
+      "Bash(PYTHONPATH=src python -c \"from feature_store import FeatureStoreClient, EntityKind, FeatureViewConfig, ModelConfig, LabelConfig; print\\('OK'\\)\")"
+    ]
+  }
+}

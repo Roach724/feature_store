@@ -1,0 +1,48 @@
+name: "pcd_acq_label"
+version: "v1"
+owner: "derick_x_dang@pccw.com"
+description: "pcd acq label table"
+
+storage:
+  type: "gcs"
+  base_path: "gs://hkt-emr-derick/feature_store/mob/labels/pcd_acq_labels/v1"
+  partition_column: "label_month"
+  format: "parquet"
+
+pipeline:
+  update_frequency: "monthly"
+  source_job: "" 
+  alert_threshold_hours: 26
+
+retention:
+  ttl_days: 360
+  cold_tier_days: 180
+
+schema:
+  - name: "id_doc_num"
+    type: "string"
+    is_primary_key: true
+  - name: "id_doc_type"
+    type: "string"
+    is_primary_key: true
+  - name: "channel_name"
+    type: "string"
+    is_primary_key: false 
+  - name: "appln_date"
+    type: "string"
+    is_primary_key: false
+  - name: "source"
+    type: "string"
+    is_primary_key: false
+  - name: "acq_pcd"
+    type: "integer"
+    description: ""
+    is_primary_key: false
+    is_label: true
+
+# --- Partition Column ---
+  - name: "label_month"
+    type: "string"
+    description: "Data date for feature calculation (format: YYYY-MM-DD), representing the full snapshot up to that day"
+    is_primary_key: false
+    is_deprecated: false
