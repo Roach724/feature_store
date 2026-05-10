@@ -91,6 +91,33 @@ class CheckpointContext:
         self.path = None
 
 
+def _infer_primary_keys(df) -> List[str]:
+    """Infer primary key columns from DataFrame columns."""
+    keys = [c for c in df.columns if c.endswith("_id") or c == "id"]
+    return keys if keys else []
+
+
+def _infer_partition_columns(df) -> List[str]:
+    """Infer partition columns from common names."""
+    for candidate in ["dt", "partition_date", "feature_month", "label_month"]:
+        if candidate in df.columns:
+            return [candidate]
+    return ["dt"]
+
+
+def _infer_storage_path(registry_dir: str, kind: EntityKind, name: str, version: str) -> str:
+    """Infer a storage base path from the registry directory."""
+    base = registry_dir.replace("/registry", "").replace("\\registry", "")
+    kind_map = {
+        EntityKind.FEATURE_VIEW: "feature_views",
+        EntityKind.MODEL: "models",
+        EntityKind.LABEL: "labels",
+        EntityKind.DATASET: "datasets",
+        EntityKind.TRAINING_SET: "training_sets",
+    }
+    return f"{base}/{kind_map.get(kind, 'entities')}/{name}/{version}"
+
+
 # ---------------------------------------------------------------------------
 # FeatureStoreClient
 # ---------------------------------------------------------------------------
@@ -289,9 +316,39 @@ class FeatureStoreClient:
         version: str,
         partition_num: int = 24,
         allow_extra_columns: bool = False,
+        auto_register: bool = True,
+        primary_keys: Optional[List[str]] = None,
+        partition_columns: Optional[List[str]] = None,
+        storage_base_path: Optional[str] = None,
+        **kwargs,
     ) -> None:
         """Validate *df* against the registered config and persist it."""
-        config = self._load_config(kind, name, version)
+        # Try to load existing config; auto-register if not found.
+        try:
+            config = self._load_config(kind, name, version)
+        except EntityNotFoundError:
+            if not auto_register:
+                raise
+            resolved_pk = primary_keys or _infer_primary_keys(df)
+            resolved_pc = partition_columns or _infer_partition_columns(df)
+            resolved_storage = storage_base_path or _infer_storage_path(
+                self.registry_dir, kind, name, version
+            )
+            logger.info(
+                "Auto-registering %s/%s/%s (primary_keys=%s, partition_columns=%s, storage=%s)",
+                kind.value, name, version, resolved_pk, resolved_pc, resolved_storage,
+            )
+            self.register(
+                df,
+                kind=kind,
+                name=name,
+                version=version,
+                primary_keys=resolved_pk,
+                partition_columns=resolved_pc,
+                storage_base_path=resolved_storage,
+                **kwargs,
+            )
+            config = self._load_config(kind, name, version)
         # For configs without a schema (e.g. DatasetConfig), allow extra columns.
         if not getattr(config, "schema", None):
             allow_extra_columns = True
@@ -544,11 +601,21 @@ class FeatureStoreClient:
         version: str,
         mode: str = "overwrite",
         partition_num: int = 200,
+        auto_register: bool = True,
+        primary_keys: Optional[List[str]] = None,
+        partition_columns: Optional[List[str]] = None,
+        storage_base_path: Optional[str] = None,
+        **kwargs,
     ) -> None:
         """Write a dataset entity."""
         self.write_entity(
             dataset, EntityKind.DATASET, name, version,
             partition_num=partition_num,
+            auto_register=auto_register,
+            primary_keys=primary_keys,
+            partition_columns=partition_columns,
+            storage_base_path=storage_base_path,
+            **kwargs,
         )
 
     def get_dataset(

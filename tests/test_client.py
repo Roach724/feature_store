@@ -224,6 +224,103 @@ class TestCheckpointContext:
         ctx.cleanup()  # should not raise
 
 
+class TestAutoRegister:
+    def test_write_entity_auto_registers_by_default(self, client, spark_session, tmp_path):
+        """write_entity should auto-register when entity doesn't exist."""
+        base_path = os.path.join(tmp_path, "data", "auto_fv", "v1")
+        df = spark_session.createDataFrame(
+            [(1, "2024-01-01", 0.5)], ["user_id", "dt", "score"]
+        )
+        client.write_entity(
+            df, EntityKind.FEATURE_VIEW, "auto_fv", "v1",
+            storage_base_path=base_path,
+        )
+        info = client.get_entity_info(EntityKind.FEATURE_VIEW, "auto_fv", "v1")
+        assert info.name == "auto_fv"
+        assert info.kind == "feature_view"
+
+    def test_write_entity_auto_register_disabled(self, client, spark_session, tmp_path):
+        """write_entity with auto_register=False should raise EntityNotFoundError."""
+        df = spark_session.createDataFrame([(1,)], ["x"])
+        with pytest.raises(Exception):
+            client.write_entity(
+                df, EntityKind.FEATURE_VIEW, "never_registered", "v1",
+                auto_register=False,
+            )
+
+    def test_write_entity_infers_primary_keys(self, spark_session, tmp_path):
+        """Auto-register should infer primary_keys from columns ending in _id."""
+        registry_dir = os.path.join(tmp_path, "registry")
+        os.makedirs(registry_dir)
+        from feature_store.client import FeatureStoreClient
+        client = FeatureStoreClient(spark=spark_session, registry_dir=registry_dir)
+
+        base_path = os.path.join(tmp_path, "data", "infer_pk", "v1")
+        df = spark_session.createDataFrame(
+            [(1, "a", "2024-01-01", 0.5)],
+            ["account_id", "name", "dt", "score"]
+        )
+        client.write_entity(
+            df, EntityKind.FEATURE_VIEW, "infer_pk", "v1",
+            storage_base_path=base_path,
+        )
+        info = client.get_entity_info(EntityKind.FEATURE_VIEW, "infer_pk", "v1")
+        pk_names = {k.name for k in info.primary_keys}
+        assert "account_id" in pk_names
+
+    def test_write_entity_explicit_metadata_overrides_inference(self, spark_session, tmp_path):
+        """Explicit primary_keys/partition_columns should override inference."""
+        registry_dir = os.path.join(tmp_path, "registry")
+        os.makedirs(registry_dir)
+        from feature_store.client import FeatureStoreClient
+        client = FeatureStoreClient(spark=spark_session, registry_dir=registry_dir)
+
+        base_path = os.path.join(tmp_path, "data", "explicit", "v1")
+        df = spark_session.createDataFrame(
+            [(1, "2024-01-01", 0.5)], ["custom_key", "custom_dt", "score"]
+        )
+        client.write_entity(
+            df, EntityKind.FEATURE_VIEW, "explicit", "v1",
+            primary_keys=["custom_key"],
+            partition_columns=["custom_dt"],
+            storage_base_path=base_path,
+        )
+        info = client.get_entity_info(EntityKind.FEATURE_VIEW, "explicit", "v1")
+        assert info.primary_keys[0].name == "custom_key"
+        assert info.partition_columns[0].name == "custom_dt"
+
+    def test_write_dataset_auto_registers(self, client, spark_session, tmp_path):
+        """write_dataset should also auto-register."""
+        base_path = os.path.join(tmp_path, "data", "auto_ds", "v1")
+        df = spark_session.createDataFrame(
+            [(1, "2024-01-01", 0.7)], ["user_id", "dt", "target"]
+        )
+        client.write_dataset(
+            df, "auto_ds", "v1",
+            storage_base_path=base_path,
+        )
+        info = client.get_entity_info(EntityKind.DATASET, "auto_ds", "v1")
+        assert info.name == "auto_ds"
+
+    def test_write_entity_already_registered_no_duplicate(self, client, spark_session, tmp_path):
+        """When entity is already registered, auto_register is skipped."""
+        base_path = os.path.join(tmp_path, "data", "existing", "v1")
+        config = FeatureViewConfig(
+            name="existing", version="v1",
+            primary_keys=[KeySpec(name="user_id", type="integer")],
+            partition_columns=[KeySpec(name="dt", type="string")],
+            storage=StorageSpec(base_path=base_path),
+            schema=[ColumnSpec(name="score", type="double")],
+        )
+        client.register(config)
+        df = spark_session.createDataFrame(
+            [(1, "2024-01-01", 0.5)], ["user_id", "dt", "score"]
+        )
+        client.write_entity(df, EntityKind.FEATURE_VIEW, "existing", "v1")
+        info = client.get_entity_info(EntityKind.FEATURE_VIEW, "existing", "v1")
+        assert info.owner == ""  # unchanged from registered config
+
+
 @pytest.mark.skipif(sys.platform == "win32", reason="setCheckpointDir not supported on Windows")
 class TestCheckpointContextManager:
     def test_context_creates_and_cleans(self, spark_session, tmp_path):
