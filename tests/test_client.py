@@ -9,7 +9,7 @@ from pyspark.sql import SparkSession
 from feature_store.client import CheckpointContext, FeatureStoreClient
 from feature_store.types import EntityKind
 from feature_store.schema import (
-    FeatureViewConfig, ModelConfig, DatasetConfig,
+    FeatureViewConfig, ModelConfig, DatasetConfig, LabelConfig,
     KeySpec, ColumnSpec, StorageSpec,
 )
 
@@ -319,3 +319,76 @@ class TestModelFeaturesWithCheckpointCtx:
 
         # After context exits, checkpoint should be cleaned
         assert backend.exists(ctx_path) is False
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="setCheckpointDir not supported on Windows")
+class TestExportWithCheckpointCtx:
+    def test_export_training_dataset_with_checkpoint_ctx(self, client, spark_session, tmp_path):
+        from feature_store.schema import FeatureViewConfig, ModelConfig, LabelConfig, KeySpec, ColumnSpec, StorageSpec
+        from feature_store.types import EntityKind
+
+        # Setup feature view
+        fv_path = os.path.join(tmp_path, "data", "fv_exp", "v1")
+        fv = FeatureViewConfig(
+            name="fv_exp", version="v1",
+            primary_keys=[KeySpec(name="user_id", type="integer")],
+            partition_columns=[KeySpec(name="dt", type="string")],
+            storage=StorageSpec(base_path=fv_path),
+            schema=[ColumnSpec(name="feat1", type="double")],
+        )
+        client.register(fv)
+        client.write_entity(
+            spark_session.createDataFrame([(1, "2024-01-01", 0.5)], ["user_id", "dt", "feat1"]),
+            EntityKind.FEATURE_VIEW, "fv_exp", "v1",
+        )
+
+        # Setup label
+        label_path = os.path.join(tmp_path, "data", "lbl_exp", "v1")
+        label = LabelConfig(
+            name="lbl_exp", version="v1",
+            primary_keys=[KeySpec(name="user_id", type="integer")],
+            partition_columns=[KeySpec(name="dt", type="string")],
+            storage=StorageSpec(base_path=label_path),
+            schema=[ColumnSpec(name="target", type="integer", is_label=True)],
+        )
+        client.register(label)
+        client.write_entity(
+            spark_session.createDataFrame([(1, "2024-01-01", 1)], ["user_id", "dt", "target"]),
+            EntityKind.LABEL, "lbl_exp", "v1",
+        )
+
+        # Setup model
+        model = ModelConfig(
+            name="model_exp", version="v1",
+            primary_keys=[KeySpec(name="user_id", type="integer")],
+            partition_columns=[KeySpec(name="dt", type="string")],
+            schema=[
+                ColumnSpec(name="feat1", type="double", feature_view="fv_exp", feature_view_version="v1"),
+            ],
+        )
+        client.register(model)
+
+        query_df = spark_session.createDataFrame([(1, "2024-01-01")], ["user_id", "dt"])
+
+        ckpt_base = os.path.join(tmp_path, "ckpt_base")
+        os.makedirs(ckpt_base)
+        output_path = os.path.join(tmp_path, "output")
+
+        ctx_path = None
+        with client.checkpoint_context(ckpt_base) as ctx:
+            ctx_path = ctx.path
+            dataset = client.export_training_dataset(
+                query_df=query_df,
+                model_name="model_exp", model_version="v1",
+                label_name="lbl_exp", label_version="v1",
+                feature_start_date="2024-01-01",
+                checkpoint_ctx=ctx,
+                dry_run=False,
+                output_path=output_path,
+            )
+            assert dataset.count() == 1
+
+        # Checkpoint cleaned after context exit
+        assert not os.path.exists(ctx_path)
+        # Output written
+        assert os.path.exists(output_path)

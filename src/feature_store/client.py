@@ -462,6 +462,7 @@ class FeatureStoreClient:
         join_type: str = "left",
         dry_run: bool = True,
         output_path: Optional[str] = None,
+        checkpoint_ctx=None,
     ):
         """Join features (from a registered model) with labels and
         optionally persist the result.
@@ -515,6 +516,7 @@ class FeatureStoreClient:
         feature_df = self.get_model_features(
             model_name, model_version, query_df,
             start_date=feature_start_date, end_date=feature_end_date,
+            checkpoint_ctx=checkpoint_ctx,
         )
 
         # Join features with labels.
