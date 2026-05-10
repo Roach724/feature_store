@@ -1,0 +1,21 @@
+kind: model
+name: "test_model"
+version: "v1"
+owner: "test@corp.com"
+description: "Test model for migration"
+
+primary_keys: []
+
+partition_columns:
+  - name: "dt"
+    type: "string"
+
+schema:
+  - name: "age"
+    type: "string"
+    feature_view: "test_features"
+    feature_view_version: "v1"
+  - name: "score"
+    type: "string"
+    feature_view: "test_features"
+    feature_view_version: "v1"

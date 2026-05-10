@@ -1,0 +1,32 @@
+kind: feature_view
+name: "test_features"
+version: "v1"
+owner: "test@corp.com"
+description: "Test feature view for migration"
+
+primary_keys:
+  - name: "user_id"
+    type: "string"
+
+partition_columns:
+  - name: "dt"
+    type: "string"
+
+storage:
+  base_path: "gs://bucket/test/feature_views/test_features/v1"
+  format: "parquet"
+
+pipeline:
+  update_frequency: "daily"
+  source_job: ""
+  alert_threshold_hours: 48
+
+retention:
+  ttl_days: 360
+  cold_tier_days: 180
+
+schema:
+  - name: "age"
+    type: "integer"
+  - name: "score"
+    type: "double"

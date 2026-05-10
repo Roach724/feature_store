@@ -1,0 +1,41 @@
+name: "test_features"
+version: "v1"
+entity: "customers"
+owner: "test@corp.com"
+description: "Test feature view for migration"
+
+storage:
+  type: "gcs"
+  base_path: "gs://bucket/test/feature_views/test_features/v1"
+  partition_column: "dt"
+  format: "parquet"
+
+pipeline:
+  update_frequency: "daily"
+  source_job: ""
+  alert_threshold_hours: "48"
+
+retention:
+  ttl_days: 360
+  cold_tier_days: 180
+
+schema:
+  - name: "user_id"
+    type: "string"
+    description: "primary key"
+    is_primary_key: true
+
+  - name: "dt"
+    type: "string"
+    description: "partition col"
+    is_primary_key: false
+
+  - name: "age"
+    type: "integer"
+    description: "User age"
+    is_primary_key: false
+
+  - name: "score"
+    type: "double"
+    description: "User score"
+    is_primary_key: false

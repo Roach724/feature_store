@@ -1,0 +1,7 @@
+name: "test_model"
+owner: "test@corp.com"
+description: "Test model for migration"
+
+features:
+  - "test_features@v1:age"
+  - "test_features@v1:score"

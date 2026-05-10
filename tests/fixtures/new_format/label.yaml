@@ -1,0 +1,30 @@
+kind: label
+name: "test_label"
+version: "v1"
+owner: "test@corp.com"
+description: "Test label for migration"
+
+primary_keys:
+  - name: "id_doc_num"
+    type: "string"
+  - name: "id_doc_type"
+    type: "string"
+
+partition_columns:
+  - name: "label_month"
+    type: "string"
+
+storage:
+  base_path: "gs://bucket/test/labels/test_label/v1"
+  format: "parquet"
+
+retention:
+  ttl_days: 360
+  cold_tier_days: 180
+
+schema:
+  - name: "channel_name"
+    type: "string"
+  - name: "acq_pcd"
+    type: "integer"
+    is_label: true

@@ -1,0 +1,40 @@
+name: "test_label"
+version: "v1"
+owner: "test@corp.com"
+description: "Test label for migration"
+
+storage:
+  type: "gcs"
+  base_path: "gs://bucket/test/labels/test_label/v1"
+  partition_column: "label_month"
+  format: "parquet"
+
+pipeline:
+  update_frequency: "monthly"
+  source_job: ""
+  alert_threshold_hours: "26"
+
+retention:
+  ttl_days: 360
+  cold_tier_days: 180
+
+schema:
+  - name: "id_doc_num"
+    type: "string"
+    is_primary_key: true
+  - name: "id_doc_type"
+    type: "string"
+    is_primary_key: true
+  - name: "channel_name"
+    type: "string"
+    is_primary_key: false
+  - name: "acq_pcd"
+    type: "integer"
+    description: ""
+    is_primary_key: false
+    is_label: true
+  - name: "label_month"
+    type: "string"
+    description: "partition"
+    is_primary_key: false
+    is_deprecated: false
