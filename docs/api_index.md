@@ -6,11 +6,11 @@ Catalog of all public APIs in the Feature Store, organized by module.
 
 | Module | Source | Detail Doc | Description |
 |--------|--------|------------|-------------|
-| `types` | `feature_store/types.py` | [api_types.md](api_types.md) | Enums for entity kind, storage format, update frequency |
-| `schema` | `feature_store/schema.py` | [api_schema.md](api_schema.md) | Typed dataclasses for entity configuration |
-| `storage` | `feature_store/storage.py` | [api_storage.md](api_storage.md) | Pluggable storage backends (local, GCS) |
-| `registry` | `feature_store/registry.py` | [api_registry.md](api_registry.md) | YAML serialization, schema validation, lifecycle |
-| `client` | `feature_store/client.py` | [api_client.md](api_client.md) | FeatureStoreClient — primary user-facing API |
+| `types` | `src/feature_store/types.py` | [api_types.md](api_types.md) | Enums for entity kind, storage format, update frequency |
+| `schema` | `src/feature_store/schema.py` | [api_schema.md](api_schema.md) | Typed dataclasses for entity configuration |
+| `storage` | `src/feature_store/storage.py` | [api_storage.md](api_storage.md) | Pluggable storage backends (local, GCS) |
+| `registry` | `src/feature_store/registry.py` | [api_registry.md](api_registry.md) | YAML serialization, schema validation, lifecycle |
+| `client` | `src/feature_store/client.py` | [api_client.md](api_client.md) | FeatureStoreClient — primary user-facing API |
 
 ## API Reference by Module
 
@@ -67,7 +67,7 @@ Catalog of all public APIs in the Feature Store, organized by module.
 | API | Type | Detail Doc | Description |
 |-----|------|------------|-------------|
 | `FeatureStoreClient` | Class | [api_client.md](api_client.md) | Main entry point for all feature store operations |
-| `CheckpointContext` | Class | [api_client.md](api_client.md) | Context manager for Spark checkpoint lifecycle |
+| `CheckpointContext` | Class | [api_client.md](api_client.md) | Holds checkpoint directory path for `checkpoint_context` |
 | `FeatureStoreClient.register` | Method | [api_client.md](api_client.md) | Register an entity from config or DataFrame |
 | `FeatureStoreClient.register_feature_view` | Method | [api_client.md](api_client.md) | Convenience: register a feature view |
 | `FeatureStoreClient.register_model` | Method | [api_client.md](api_client.md) | Convenience: register a model |

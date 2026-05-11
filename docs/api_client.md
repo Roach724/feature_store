@@ -12,7 +12,7 @@ for registering, writing, reading, and assembling feature store entities.
 | Symbol | Type | Description |
 |--------|------|-------------|
 | `FeatureStoreClient` | Class | Main entry point for all feature store operations |
-| `CheckpointContext` | Class | Context manager for Spark checkpoint lifecycle |
+| `CheckpointContext` | Class | Holds checkpoint directory path; used by `checkpoint_context` context manager |
 
 ---
 

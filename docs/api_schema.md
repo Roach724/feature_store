@@ -208,7 +208,7 @@ All config classes share these base fields from `_BaseConfig`:
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `name` | `str` | Required | Entity name. Must match `[a-z][a-z0-9_]*` |
+| `name` | `str` | Required | Entity name. Must match `^[a-z][a-z0-9_]*$` |
 | `version` | `str` | Required | Entity version (e.g. `"v1"`) |
 | `owner` | `str` | `""` | Owner or team |
 | `description` | `str` | `""` | Human-readable description |
