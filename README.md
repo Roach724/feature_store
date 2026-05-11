@@ -64,7 +64,13 @@ features.show()
 
 | Document | Description |
 |----------|-------------|
-| [API Reference](docs/API.md) | Module overview and full client API reference |
+| [Project Overview](docs/overview.md) | Project purpose, structure, and capabilities |
+| [API Index](docs/api_index.md) | Catalog of all APIs by module |
+| [Types Module](docs/api_types.md) | Enums: EntityKind, StorageFormat, UpdateFrequency |
+| [Schema Module](docs/api_schema.md) | Config dataclasses: FeatureViewConfig, ModelConfig, etc. |
+| [Storage Module](docs/api_storage.md) | Backend abstraction: LocalBackend, GCSBackend |
+| [Registry Module](docs/api_registry.md) | YAML serialization, validation, lifecycle |
+| [Client Module](docs/api_client.md) | FeatureStoreClient — user-facing API |
 | [CI/CD](docs/CI_CD.md) | Continuous integration and deployment pipeline |
 | [Changelog](CHANGELOG.md) | Version history and release notes |
 | [Design Specs](docs/superpowers/specs/) | Design documents for each feature |
